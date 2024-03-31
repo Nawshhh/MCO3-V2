@@ -30,6 +30,8 @@ module.exports = function (app,app_data) {
   const feedbackModel = app_data['feedbackModel'];
   const commentModel  = app_data['commentModel'];
 
+  let loginInfo;
+
   // Function to load server data
   async function loadServer(req, res, data) {
     try {
@@ -69,7 +71,7 @@ module.exports = function (app,app_data) {
 
   // Routes
   app.get("/", (req, res) => {
-    loadServer(req, res, null);
+    loadServer(req, res, loginInfo);
   });
 
   app.post("/update-image", async (req, res) => {
@@ -222,7 +224,8 @@ module.exports = function (app,app_data) {
           layout: false,
           restaurant_row1,
           restaurant_row2,
-          restaurant_row3
+          restaurant_row3,
+          loginData: loginInfo
         });
       } else {
         res.render("view-establishment", {
@@ -231,7 +234,7 @@ module.exports = function (app,app_data) {
           restaurant_row1,
           restaurant_row2,
           restaurant_row3,
-          loginData: null,
+          loginData: loginInfo,
         });
       }
     } catch (error) {
@@ -240,7 +243,6 @@ module.exports = function (app,app_data) {
     }
 });
 
-
   // Route to create a new user
   app.post("/create-user", async (req, res) => {
     try {
@@ -248,15 +250,17 @@ module.exports = function (app,app_data) {
       const dbo = client.db("eggyDB");
       const collName = dbo.collection("users");
 
+      console.log(req.body);
+
       const userInfo = {
-        email: req.body.user1,
-        username: req.body.user2,
-        password: req.body.pass,
+        email: req.body.email1,
+        username: req.body.sign2,
+        password: req.body.pass1,
         avatar_url: "./images/profile-pic.png",
       };
 
       await collName.insertOne(userInfo);
-      await loadServer(req, res, null);
+      res.redirect(`/`);
     } catch (error) {
       console.error("Error creating user:", error);
       res.status(500).send("Internal Server Error");
@@ -279,10 +283,10 @@ module.exports = function (app,app_data) {
       if (userInfo) {
         searchQuery.avatar_url = userInfo.avatar_url;
         loginInfo = searchQuery;
-        await loadServer(req, res, loginInfo);
+        res.redirect(`/`);
       } else {
         loginInfo = null;
-        await loadServer(req, res, null);
+        res.redirect(`/`);
       }
     } catch (error) {
       console.error("Error reading user:", error);
