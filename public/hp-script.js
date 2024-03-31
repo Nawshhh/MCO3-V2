@@ -118,13 +118,13 @@
     document.querySelector(".popup-signup-content").style.display = "none";
     document.querySelector(".popup-signup").style.display = "none";
 
-    let email = document.getElementById("email-signup");
+    let email = document.getElementsByName("email1");
     email.value = '';
 
-    let username = document.getElementsByName("user2")[0];
+    let username = document.getElementsByName("sign2");
     username.value = '';
 
-    let password = document.getElementById("password-signup");
+    let password = document.getElementsByName("firstpass");
     password.value = '';
 
     let v_password = document.getElementById("verify-password-signup");
