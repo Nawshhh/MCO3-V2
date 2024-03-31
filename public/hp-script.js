@@ -192,50 +192,50 @@
                 $('#resto-title').text(data.title); // Update restoName
   
                 //---
-  
-                const commentData = data.commentData;
-  
-                console.log(commentData[0].username);
 
-                // Handle the first review popup
-                if (commentData && commentData.length > 0) {
-                  $('#firstUsername').text(commentData[0].username);
-                  $('#firstContent').text(commentData[0].content);
-                  $('#first-review .right-review-popup-odd').empty();
-                  commentData[0].ratingCount.forEach(function() {
-                    $('#first-review .right-review-popup-odd').append('<span class="fa fa-star checked"></span>');
-                  });
-                  $('#first-review').show();
-                } else {
-                  $('#first-review').hide();
-                }
+                display(data.commentData);
   
-                // Handle the second review popup
-                if (commentData && commentData.length > 1) {
-                  $('#secondUsername').text(commentData[1].username);
-                  $('#secondContent').text(commentData[1].content);
-                  $('#second-review .left-review-popup-even img').attr('src', 'https://www.shutterstock.com/image-vector/user-profile-icon-vector-avatar-600nw-2247726673.jpg');
-                  $('#second-review .right-review-popup-even').empty();
-                  commentData[1].ratingCount.forEach(function() {
-                    $('#second-review .right-review-popup-even').append('<span class="fa fa-star checked"></span>');
-                  });
-                  $('#second-review').show();
-                } else {
-                  $('#second-review').hide();
-                }
+                // console.log(commentData[0].username);
+
+                // // Handle the first review popup
+                // if (commentData && commentData.length > 0) {
+                //   $('#firstUsername').text(commentData[0].username);
+                //   $('#firstContent').text(commentData[0].content);
+                //   $('#first-review .right-review-popup-odd').empty();
+                //   commentData[0].ratingCount.forEach(function() {
+                //     $('#first-review .right-review-popup-odd').append('<span class="fa fa-star checked"></span>');
+                //   });
+                //   $('#first-review').show();
+                // } else {
+                //   $('#first-review').hide();
+                // }
   
-                // Handle the third review popup
-                if (commentData && commentData.length > 2) {
-                  $('#thirdUsername').text(commentData[2].username);
-                  $('#thirdContent').text(commentData[2].content);
-                  $('#third-review .right-review-popup-odd').empty();
-                  commentData[2].ratingCount.forEach(function() {
-                    $('#third-review .right-review-popup-odd').append('<span class="fa fa-star checked"></span>');
-                  });
-                  $('#third-review').show();
-                } else {
-                  $('#third-review').hide();
-                }
+                // // Handle the second review popup
+                // if (commentData && commentData.length > 1) {
+                //   $('#secondUsername').text(commentData[1].username);
+                //   $('#secondContent').text(commentData[1].content);
+                //   $('#second-review .left-review-popup-even img').attr('src', 'https://www.shutterstock.com/image-vector/user-profile-icon-vector-avatar-600nw-2247726673.jpg');
+                //   $('#second-review .right-review-popup-even').empty();
+                //   commentData[1].ratingCount.forEach(function() {
+                //     $('#second-review .right-review-popup-even').append('<span class="fa fa-star checked"></span>');
+                //   });
+                //   $('#second-review').show();
+                // } else {
+                //   $('#second-review').hide();
+                // }
+  
+                // // Handle the third review popup
+                // if (commentData && commentData.length > 2) {
+                //   $('#thirdUsername').text(commentData[2].username);
+                //   $('#thirdContent').text(commentData[2].content);
+                //   $('#third-review .right-review-popup-odd').empty();
+                //   commentData[2].ratingCount.forEach(function() {
+                //     $('#third-review .right-review-popup-odd').append('<span class="fa fa-star checked"></span>');
+                //   });
+                //   $('#third-review').show();
+                // } else {
+                //   $('#third-review').hide();
+                // }
   
                 //---
                 order = data.index;  // Update the order variable
@@ -256,6 +256,9 @@
                 if(status === 'success'){
                   $('#display-img-resto').attr('src', data.url);
                   $('#resto-title').text(data.title); // Update restoName
+
+                  display(data.commentData);
+
                   order = data.index;  // Update the order variable
                   moveDots(order+1);
                 }
@@ -264,7 +267,56 @@
     });
   });
 
+  function display (commentData){
+    if (commentData.length > 0 && commentData[0] != null){
+      $('#user1').text(commentData[0].username);
+      $('#content1').text(commentData[0].content);
+      $("#first-star-1").remove();
+      $("#first-star-1").remove();
+      $("#first-star-1").remove();
+      $("#first-star-1").remove();
+      $("#first-star-1").remove();
+      commentData[0].ratingCount.forEach(function() {
+        $('#first-review .right-review-popup-odd').append('<span id="first-star-1" class="fa fa-star checked"></span>');
+      });
+      $('#first-review').show();
+    } else { 
+      $('#first-review').hide();
+    }
 
+    if (commentData.length > 1 && commentData[1] != null){
+      $('#user2').text(commentData[1].username);
+      $('#content2').text(commentData[1].content);
+      $("#first-star-2").remove();
+      $("#first-star-2").remove();
+      $("#first-star-2").remove();
+      $("#first-star-2").remove();
+      $("#first-star-2").remove();
+      commentData[1].ratingCount.forEach(function() {
+        $('#second-review .left-review-popup-even').append('<span id="first-star-2" class="fa fa-star checked"></span>');
+      });
+      $('#second-review').show();
+    } else { 
+      $('#second-review').hide();
+    }
+
+    if (commentData.length > 2 && commentData[2] != null){
+      $('#user3').text(commentData[2].username);
+      $('#content3').text(commentData[2].content);
+      $("#first-star-3").remove();
+      $("#first-star-3").remove();
+      $("#first-star-3").remove();
+      $("#first-star-3").remove();
+      $("#first-star-3").remove();
+      commentData[2].ratingCount.forEach(function() {
+        $('#third-review .right-review-popup-odd').append('<span id="first-star-3" class="fa fa-star checked"></span>');
+      });
+      $('#third-review').show();
+    } else { 
+      $('#third-review').hide();
+    }
+
+  }
 
 
   // function next(){

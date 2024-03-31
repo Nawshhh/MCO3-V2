@@ -77,7 +77,7 @@ module.exports = function (app,app_data) {
       const images = await restoModel.find({}).lean();
 
       let i = Number(req.body.input);
-      console.log(`Current index ${i}`);
+      //console.log(`Current index ${i}`);
 
       //get restoName first
       const restoNames = await restoModel.find({}, 'restoName').lean();
@@ -116,7 +116,11 @@ module.exports = function (app,app_data) {
         currentComment[i]['ratingCount'] = ratingCountArray;
       }
 
-      console.log(currentComment[0].username);
+      if (currentComment == null){
+        currentComment = null;
+      }
+
+      console.log(`Restaurant: ${restoNames[i].restoName}`);
 
       res.send({
         index: i,
@@ -131,27 +135,111 @@ module.exports = function (app,app_data) {
   });
 
   // Route to view establishments with optional filter by stars
-  app.get("/restaurants", async (req, res) => {
+/*   app.get("/restaurants", async (req, res) => {
     try {
       const { stars } = req.query;
-      const filter = stars ? { main_rating: { $lt: Number(stars) } } : {};
+      let filter = {};
+      if (stars) {
+        const starsArray = Array.isArray(stars) ? stars.map(Number) : [Number(stars)];
+        filter = { main_rating: { $in: starsArray } };
+      }
       const restaurants = await getData("restaurants", filter);
       const restaurant_row1 = restaurants.slice(0, 3);
       const restaurant_row2 = restaurants.slice(3, 6);
       const restaurant_row3 = restaurants.slice(6);
-      res.render("view-establishment", {
-        layout: "index",
-        title: "View Establishments",
-        restaurant_row1,
-        restaurant_row2,
-        restaurant_row3,
-        loginData: null, // Assuming loginData is not needed here
-      });
+  
+      if (req.headers['x-requested-with'] === 'XMLHttpRequest') {
+        // Specify the correct path to the establishments partial
+        res.render("partials/establishments", {
+          layout: false, // Don't use the layout since this is a partial
+          restaurant_row1,
+          restaurant_row2,
+          restaurant_row3
+        });
+      } else {
+        // Full page render for initial load or non-AJAX requests
+        res.render("view-establishment", {
+          layout: "index",
+          title: "View Establishments",
+          restaurant_row1,
+          restaurant_row2,
+          restaurant_row3,
+          loginData: null,
+        });
+      }
     } catch (error) {
       console.error("Error fetching establishments:", error);
       res.status(500).send("Internal Server Error");
     }
   });
+  app.get("/search", async (req, res) => {
+    try {
+      const { query } = req.query; // Assuming the search query parameter is named 'query'
+      let filter = {};
+      if (query) {
+        filter = { restoName: { $regex: new RegExp(query, "i") } }; // Case-insensitive search
+      }
+      const restaurants = await getData("restaurants", filter);
+      const restaurant_row1 = restaurants.slice(0, 3);
+      const restaurant_row2 = restaurants.slice(3, 6);
+      const restaurant_row3 = restaurants.slice(6);
+  
+      res.render("partials/establishments", {
+        layout: false, // This is a partial
+        restaurant_row1,
+        restaurant_row2,
+        restaurant_row3
+      });
+    } catch (error) {
+      console.error("Error searching establishments:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  }); */
+  app.get("/restaurants", async (req, res) => {
+    try {
+      const { stars, query } = req.query;
+      let filter = {};
+
+      // Handle search queries
+      if (query) {
+        filter.restoName = { $regex: new RegExp(query, "i") }; // Case-insensitive search
+      }
+
+      // Handle star ratings
+      if (stars) {
+        const starsArray = Array.isArray(stars) ? stars.map(Number) : [Number(stars)];
+        filter.main_rating = { $in: starsArray };
+      }
+
+      const restaurants = await getData("restaurants", filter);
+      const restaurant_row1 = restaurants.slice(0, 3);
+      const restaurant_row2 = restaurants.slice(3, 6);
+      const restaurant_row3 = restaurants.slice(6);
+
+      // Render the response based on AJAX request or full page render
+      if (req.headers['x-requested-with'] === 'XMLHttpRequest') {
+        res.render("partials/establishments", {
+          layout: false,
+          restaurant_row1,
+          restaurant_row2,
+          restaurant_row3
+        });
+      } else {
+        res.render("view-establishment", {
+          layout: "index",
+          title: "View Establishments",
+          restaurant_row1,
+          restaurant_row2,
+          restaurant_row3,
+          loginData: null,
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching establishments:", error);
+      res.status(500).send("Internal Server Error");
+    }
+});
+
 
   // Route to create a new user
   app.post("/create-user", async (req, res) => {

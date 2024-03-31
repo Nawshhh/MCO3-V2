@@ -20,8 +20,8 @@
             />
         </div>
         <div class="right-review-popup-odd">
-            <h3 id="firstUsername" class="italic bold">{{commentData.[0].username}}</h3>
-            <p id="firstContent">{{commentData.[0].content}}</p>
+            <h3 id="user1" class="italic bold">{{commentData.[0].username}}</h3>
+            <p id="content1">{{commentData.[0].content}}</p>
             {{#each commentData.[0].ratingCount}}
                 <span id="first-star-1" class="fa fa-star checked"></span>
             {{/each}}
@@ -32,8 +32,8 @@
     {{#if commentData.[1]}}
         <div id="second-review" class="review-popup">
         <div class="left-review-popup-even">
-            <h3 id="secondUsername" class="italic bold">{{commentData.[1].username}}</h3>
-            <p id="secondContent">{{commentData.[1].content}}</p>
+            <h3 id="user2" class="italic bold">{{commentData.[1].username}}</h3>
+            <p id="content2">{{commentData.[1].content}}</p>
             {{#each commentData.[1].ratingCount}}
                 <span id="first-star-2" class="fa fa-star checked"></span>
             {{/each}}
@@ -56,8 +56,8 @@
             />
         </div>
         <div class="right-review-popup-odd">
-            <h3 id="thirdUsername" class="italic bold">{{commentData.[2].username}}</h3>
-            <p id="thirdContent">{{commentData.[2].content}}</p>
+            <h3 id="user3" class="italic bold">{{commentData.[2].username}}</h3>
+            <p id="content3">{{commentData.[2].content}}</p>
             {{#each commentData.[2].ratingCount}}
                 <span id="first-star-3" class="fa fa-star checked"></span>
             {{/each}}
