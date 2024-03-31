@@ -18,7 +18,6 @@
     dots[index-1].className += " active";
   }
   
-//   function showImage(index) {
 //     var displayImgResto = document.getElementById("display-img-resto");
 //     var displayTitleResto = document.getElementById("resto-title");
 //     displayTitleResto.innerText = resto_titles[currentIndex];
@@ -94,55 +93,53 @@
         stars[i].classList.add("checked");
     }
   }
-  
-//   function removeStars() {
-//     let stars1 = document.getElementById("first-review").querySelectorAll(".fa-star");
-//     let stars2 = document.getElementById("second-review").querySelectorAll(".fa-star");
-//     let stars3 = document.getElementById("third-review").querySelectorAll(".fa-star");
-  
-//     for (let i = 0; i < stars1.length; i++) {
-//         stars1[i].classList.remove("checked");
-//         stars2[i].classList.remove("checked");
-//         stars3[i].classList.remove("checked");
-//     }
-//   }
 
   function showLogIn() {
+    document.querySelector(".popup-login-content").style.display = "block";
     document.querySelector(".popup-login").style.display = "flex";
     document.querySelector(".options").style.display = "none";
   }
   
   function closeLogIn() {
+    document.querySelector(".popup-login-content").style.display = "none";
     document.querySelector(".popup-login").style.display = "none";
   
-    let username = document.getElementById("username");
+    let username = document.getElementById("userlogin");
     username.value = '';
   
-    let password = document.getElementById("password");
+    let password = document.getElementById("passlogin");
     password.value = '';
   
     document.querySelector(".options").style.display = "block";
+    return false; // Prevent default form submission
   }
   
   function showSignup() {
+    document.querySelector(".popup-signup-content").style.display = "block";
     document.querySelector(".popup-signup").style.display = "flex";
     document.querySelector(".options").style.display = "none";
   }
   
   function closeSignup() {
+    document.querySelector(".popup-signup-content").style.display = "none";
     document.querySelector(".popup-signup").style.display = "none";
-  
-    let username = document.getElementById("username-signup");
+
+    let email = document.getElementById("email-signup");
+    email.value = '';
+
+    let username = document.getElementsByName("user2")[0];
     username.value = '';
-  
+
     let password = document.getElementById("password-signup");
     password.value = '';
-  
+
     let v_password = document.getElementById("verify-password-signup");
     v_password.value = '';
-  
+
     document.querySelector(".options").style.display = "block";
-  }
+    
+    return false; // Prevent default form submission
+}
   
   function verifyPassword(){
     let p1 = document.forms["signup"]["password-signup"].value;
@@ -159,8 +156,7 @@
   }
   
   function successfulLogin(){
-    closeLogIn();
-    return true;
+    return closeLogIn();
   }
   
 //   window.onload = function () {
@@ -190,54 +186,9 @@
               if(status === 'success'){
                 $('#display-img-resto').attr('src', data.url);
                 $('#resto-title').text(data.title); // Update restoName
-  
-                //---
 
                 display(data.commentData);
   
-                // console.log(commentData[0].username);
-
-                // // Handle the first review popup
-                // if (commentData && commentData.length > 0) {
-                //   $('#firstUsername').text(commentData[0].username);
-                //   $('#firstContent').text(commentData[0].content);
-                //   $('#first-review .right-review-popup-odd').empty();
-                //   commentData[0].ratingCount.forEach(function() {
-                //     $('#first-review .right-review-popup-odd').append('<span class="fa fa-star checked"></span>');
-                //   });
-                //   $('#first-review').show();
-                // } else {
-                //   $('#first-review').hide();
-                // }
-  
-                // // Handle the second review popup
-                // if (commentData && commentData.length > 1) {
-                //   $('#secondUsername').text(commentData[1].username);
-                //   $('#secondContent').text(commentData[1].content);
-                //   $('#second-review .left-review-popup-even img').attr('src', 'https://www.shutterstock.com/image-vector/user-profile-icon-vector-avatar-600nw-2247726673.jpg');
-                //   $('#second-review .right-review-popup-even').empty();
-                //   commentData[1].ratingCount.forEach(function() {
-                //     $('#second-review .right-review-popup-even').append('<span class="fa fa-star checked"></span>');
-                //   });
-                //   $('#second-review').show();
-                // } else {
-                //   $('#second-review').hide();
-                // }
-  
-                // // Handle the third review popup
-                // if (commentData && commentData.length > 2) {
-                //   $('#thirdUsername').text(commentData[2].username);
-                //   $('#thirdContent').text(commentData[2].content);
-                //   $('#third-review .right-review-popup-odd').empty();
-                //   commentData[2].ratingCount.forEach(function() {
-                //     $('#third-review .right-review-popup-odd').append('<span class="fa fa-star checked"></span>');
-                //   });
-                //   $('#third-review').show();
-                // } else {
-                //   $('#third-review').hide();
-                // }
-  
-                //---
                 order = data.index;  // Update the order variable
                 moveDots(order+1);
               }
@@ -245,9 +196,6 @@
       );
     });
   
-  
-  
-
     $('#previous-button').click(function(){
         $.post(
             '/update-image',
@@ -318,35 +266,3 @@
 
   }
 
-
-  // function next(){
-  //   $.post(
-  //     /* Link sent to the server */
-  //     'update',
-  //     /* Input sent to the server */
-  //     { input: ++order },
-  //     /* Call-back function that processes the server response */
-  //     function(data, status){
-  //         if(status === 'success'){
-  //             let textContent = "{{restoData[" + data.index + "].restoPic}}";
-  //             $('#display-img-resto').attr('src', textContent);  
-  //         }//if
-  //     }//function
-  //   );//post
-  // }
-
-  // function previous(){
-  //   $.post(
-  //     /* Link sent to the server */
-  //     'update',
-  //     /* Input sent to the server */
-  //     { input: --order },
-  //     /* Call-back function that processes the server response */
-  //     function(data, status){
-  //         if(status === 'success'){
-  //             let textContent = "{{restoData[" + data.index + "].restoPic}}";
-  //             $('#display-img-resto').attr('src', textContent);  
-  //         }//if
-  //     }//function
-  //   );//post
-  // }
