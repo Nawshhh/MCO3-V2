@@ -104,12 +104,6 @@
     document.querySelector(".popup-login-content").style.display = "none";
     document.querySelector(".popup-login").style.display = "none";
   
-    let username = document.getElementById("userlogin");
-    username.value = '';
-  
-    let password = document.getElementById("passlogin");
-    password.value = '';
-  
     document.querySelector(".options").style.display = "block";
     return false; // Prevent default form submission
   }
