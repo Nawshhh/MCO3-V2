@@ -143,20 +143,29 @@ module.exports = function (app,app_data) {
     }
   });
 
-  app.get("/restaurants", async (req, res) => {
-    try {
+app.get("/restaurants", async (req, res) => {
+  try {
       const { stars, query } = req.query;
       let filter = {};
 
-      // Handle search queries
+      
       if (query) {
-        filter.restoName = { $regex: new RegExp(query, "i") }; // Case-insensitive search
+          filter = {
+              $or: [
+                  { restoName: { $regex: new RegExp(query, "i") } },
+                  { description: { $regex: new RegExp(query, "i") } }
+              ]
+          };
       }
 
       // Handle star ratings
       if (stars) {
-        const starsArray = Array.isArray(stars) ? stars.map(Number) : [Number(stars)];
-        filter.main_rating = { $in: starsArray };
+          const starsArray = Array.isArray(stars) ? stars.map(Number) : [Number(stars)];
+          if(filter.$or) {
+              filter = { $and: [{ main_rating: { $in: starsArray } }, filter] };
+          } else {
+              filter.main_rating = { $in: starsArray };
+          }
       }
 
       const restaurants = await getData("restaurants", filter);
@@ -164,30 +173,30 @@ module.exports = function (app,app_data) {
       const restaurant_row2 = restaurants.slice(3, 6);
       const restaurant_row3 = restaurants.slice(6);
 
-      // Render the response based on AJAX request or full page render
+      
       if (req.headers['x-requested-with'] === 'XMLHttpRequest') {
-        res.render("partials/establishments", {
-          layout: false,
-          restaurant_row1,
-          restaurant_row2,
-          restaurant_row3,
-          loginData: loginInfo
-        });
+          res.render("partials/establishments", {
+              layout: false,
+              restaurant_row1,
+              restaurant_row2,
+              restaurant_row3,
+              loginData: loginInfo
+          });
       } else {
-        res.render("view-establishment", {
-          layout: "index",
-          title: "View Establishments",
-          restaurant_row1,
-          restaurant_row2,
-          restaurant_row3,
-          loginData: loginInfo,
-        });
+          res.render("view-establishment", {
+              layout: "index",
+              title: "View Establishments",
+              restaurant_row1,
+              restaurant_row2,
+              restaurant_row3,
+              loginData: loginInfo,
+          });
       }
-    } catch (error) {
+  } catch (error) {
       console.error("Error fetching establishments:", error);
       res.status(500).send("Internal Server Error");
-    }
-  });
+  }
+});
 
   // Route to create a new user
   app.post("/create-user", 
